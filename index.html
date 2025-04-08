@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线表情包</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-box button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .emoji-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .emoji-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .emoji-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .emoji-info {
+            padding: 15px;
+        }
+        
+        .emoji-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .emoji-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .emoji-card img {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>在线表情包</h1>
+        
+        <div class="search-box">
+            <input type="text" placeholder="搜索表情包..." id="searchInput">
+            <button onclick="searchEmojis()">搜索</button>
+        </div>
+        
+        <div class="emoji-grid" id="emojiGrid">
+            <!-- 表情包卡片将通过JavaScript动态添加 -->
+        </div>
+    </div>
+
+    <!-- 导航 -->
+    <div style="position: fixed; right: 2%; top: 85px;z-index: 1;">
+        <div onclick="gotoPage('https://moyugame965.github.io/GameList/')"
+            style="margin: 10px 0; line-height:24px;width:50px; height: 24px;border: 1px solid #4CAF50; background-color: #4CAF50; color: white; text-align: center;border-radius: 3px;cursor: pointer;font-size: 15px;">
+            更多</div>
+        <div onclick="gotoPage('https://moyugame965.github.io/Shopping/baodan.html')"
+            style="margin: 10px 0;line-height:24px;width:50px;height: 24px;border: 1px solid #4CAF50; background-color: #4CAF50; color: white; text-align: center;border-radius: 3px;cursor: pointer;font-size: 15px;">
+            商店</div>
+        <div onclick="gotoPage('https://moyugame965.github.io/Coupon/')"
+            style="margin: 10px 0;line-height:24px;width:50px;height: 24px;border: 1px solid #4CAF50; background-color: #4CAF50; color: #ffffff; text-align: center;border-radius: 3px;cursor: pointer;font-size: 15px;">
+            外卖</div>
+        <div onclick="gotoPage('https://moyugame965.github.io/Shopping/jiudianjiu.html')"
+            style="margin: 10px 0;line-height:24px;width:50px;height: 24px;border: 1px solid #4CAF50; background-color: #4CAF50; color: #ffffff; text-align: center;border-radius: 3px;cursor: pointer;font-size: 15px;">
+            9块9</div>
+    </div>
+
+    <script>
+        // 示例表情包数据
+        const emojis = [
+            {
+                id: 1,
+                title: "二哈嘚瑟进场 - 狗",
+                imageUrl: "./0408/1.gif",
+                downloadUrl: "./0408/1.gif"
+            },
+            {
+                id: 2,
+                title: "哪吒",
+                imageUrl: "./0408/2.gif",
+                downloadUrl: "./0408/2.gif"
+            },
+            {
+                id: 3,
+                title: "猫",
+                imageUrl: "./0408/3.jpg",
+                downloadUrl: "./0408/3.jpg"
+            },
+            {
+                id: 4,
+                title: "吗喽喝奶茶",
+                imageUrl: "./0408/3.gif",
+                downloadUrl: "./0408/3.gif"
+            },
+            {
+                id: 5,
+                title: "吗喽表情包",
+                imageUrl: "./0408/4.gif",
+                downloadUrl: "./0408/4.gif"
+            },
+            {
+                id: 6,
+                title: "吗喽表情包",
+                imageUrl: "./0408/4.gif",
+                downloadUrl: "./0408/4.gif"
+            },
+            {
+                id: 7,
+                title: "猫猫路过",
+                imageUrl: "./0408/5.gif",
+                downloadUrl: "./0408/5.gif"
+            },
+            {
+                id: 8,
+                title: "麻了彻底麻了 - 狗",
+                imageUrl: "./0408/4.jpg",
+                downloadUrl: "./0408/4.jpg"
+            },
+            {
+                id: 9,
+                title: "不不是这样的 - 狗",
+                imageUrl: "./0408/5.jpg",
+                downloadUrl: "./0408/5.jpg"
+            },
+            {
+                id: 10,
+                title: "你先别急",
+                imageUrl: "./0408/6.jpg",
+                downloadUrl: "./0408/6.jpg"
+            },
+            {
+                id: 11,
+                title: "你先别急",
+                imageUrl: "./0408/7.jpg",
+                downloadUrl: "./0408/7.jpg"
+            },
+            {
+                id: 12,
+                title: "你先别急",
+                imageUrl: "./0408/8.jpg",
+                downloadUrl: "./0408/8.jpg"
+            },
+            {
+                id: 13,
+                title: "雨水打湿小台铃月入百万一定灵",
+                imageUrl: "./0408/9.jpg",
+                downloadUrl: "./0408/9.jpg"
+            },
+            // 可以添加更多表情包数据
+        ];
+
+        // 渲染表情包卡片
+        function renderEmojis(emojisToRender = emojis) {
+            const emojiGrid = document.getElementById('emojiGrid');
+            emojiGrid.innerHTML = '';
+            
+            emojisToRender.forEach(emoji => {
+                const card = document.createElement('div');
+                card.className = 'emoji-card';
+                card.innerHTML = `
+                    <img src="${emoji.imageUrl}" alt="${emoji.title}">
+                    <div class="emoji-info">
+                        <h3>${emoji.title}</h3>
+                        <a href="${emoji.downloadUrl}" class="download-btn" download>下载</a>
+                    </div>
+                `;
+                emojiGrid.appendChild(card);
+            });
+        }
+
+        // 搜索功能
+        function searchEmojis() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            const filteredEmojis = emojis.filter(emoji => 
+                emoji.title.toLowerCase().includes(searchTerm)
+            );
+            
+            renderEmojis(filteredEmojis);
+        }
+
+        // 初始化页面
+        renderEmojis();
+    </script>
+    <script>
+        function gotoPage(url) {
+            url && window.open(url);
+        }
+    </script>
+</body>
+</html> 
