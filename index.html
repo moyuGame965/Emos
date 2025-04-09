@@ -51,6 +51,11 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-box button:hover {
+            background-color: #45a049;
         }
         
         .emoji-grid {
@@ -66,6 +71,7 @@
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            will-change: transform;
         }
         
         .emoji-card:hover {
@@ -76,13 +82,14 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
+            background-color: #f0f0f0;
         }
         
         .emoji-info {
             padding: 15px;
         }
         
-        .emoji-info h3 {
+        .emo-info h3 {
             margin-bottom: 10px;
             color: #333;
         }
@@ -97,6 +104,11 @@
             text-decoration: none;
             border-radius: 4px;
             margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: #45a049;
         }
         
         @media (max-width: 768px) {
@@ -141,6 +153,36 @@
     </div>
 
     <script>
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 图片懒加载
+        const lazyLoad = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    observer.unobserve(img);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(lazyLoad, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
         // 示例表情包数据
         const emojis = [
             {
@@ -169,82 +211,199 @@
             },
             {
                 id: 5,
-                title: "吗喽表情包",
-                imageUrl: "./0408/4.gif",
-                downloadUrl: "./0408/4.gif"
-            },
-            {
-                id: 6,
-                title: "吗喽表情包",
-                imageUrl: "./0408/4.gif",
-                downloadUrl: "./0408/4.gif"
-            },
-            {
-                id: 7,
                 title: "猫猫路过",
                 imageUrl: "./0408/5.gif",
                 downloadUrl: "./0408/5.gif"
             },
             {
-                id: 8,
+                id: 6,
                 title: "麻了彻底麻了 - 狗",
                 imageUrl: "./0408/4.jpg",
                 downloadUrl: "./0408/4.jpg"
             },
             {
-                id: 9,
+                id: 7,
                 title: "不不是这样的 - 狗",
                 imageUrl: "./0408/5.jpg",
                 downloadUrl: "./0408/5.jpg"
             },
             {
-                id: 10,
+                id: 8,
                 title: "你先别急",
                 imageUrl: "./0408/6.jpg",
                 downloadUrl: "./0408/6.jpg"
             },
             {
-                id: 11,
+                id: 9,
                 title: "你先别急",
                 imageUrl: "./0408/7.jpg",
                 downloadUrl: "./0408/7.jpg"
             },
             {
-                id: 12,
+                id: 10,
                 title: "你先别急",
                 imageUrl: "./0408/8.jpg",
                 downloadUrl: "./0408/8.jpg"
             },
             {
-                id: 13,
+                id: 11,
                 title: "雨水打湿小台铃月入百万一定灵",
                 imageUrl: "./0408/9.jpg",
                 downloadUrl: "./0408/9.jpg"
             },
-            // 可以添加更多表情包数据
+            {
+                id: 12,
+                title: "上班为了下班工资只够早餐",
+                imageUrl: "./0409/1.jpg",
+                downloadUrl: "./0409/1.jpg"
+            },
+            {
+                id: 13,
+                title: "干饭要紧(吗喽表情包)",
+                imageUrl: "./0409/1.gif",
+                downloadUrl: "./0409/1.gif"
+            },
+            {
+                id: 14,
+                title: "左瞅右瞅(吗喽表情包)",
+                imageUrl: "./0409/2.jpg",
+                downloadUrl: "./0409/2.jpg"
+            },
+            {
+                id: 15,
+                title: "突然消沉 - 猫",
+                imageUrl: "./0409/2.gif",
+                downloadUrl: "./0409/2.gif"
+            },
+            {
+                id: 16,
+                title: "就这 GIF - 甄子丹",
+                imageUrl: "./0409/3.gif",
+                downloadUrl: "./0409/3.gif"
+            },
+            {
+                id: 17,
+                title: "有完没完(吗喽表情包)",
+                imageUrl: "./0409/3.jpg",
+                downloadUrl: "./0409/3.jpg"
+            },
+            {
+                id: 18,
+                title: "快了，已经在做了新建文件夹",
+                imageUrl: "./0409/4.jpg",
+                downloadUrl: "./0409/4.jpg"
+            },
+            {
+                id: 19,
+                title: "不愧是你！",
+                imageUrl: "./0409/4.gif",
+                downloadUrl: "./0409/4.gif"
+            },
+            {
+                id: 20,
+                title: "草",
+                imageUrl: "./0409/5.gif",
+                downloadUrl: "./0409/5.gif"
+            },
+            {
+                id: 26,
+                title: "啦啦啦啦啦~",
+                imageUrl: "./0409/6.gif",
+                downloadUrl: "./0409/6.gif"
+            },
+            {
+                id: 27,
+                title: "迪迦的肯定_迪迦_肯定表情",
+                imageUrl: "./0409/5.jpg",
+                downloadUrl: "./0409/5.jpg"
+            },
+            {
+                id: 28,
+                title: "迪迦的肯定_迪迦_肯定表情",
+                imageUrl: "./0409/7.gif",
+                downloadUrl: "./0409/7.gif"
+            },
+            {
+                id: 30,
+                title: "哼! - 迪迦奥特曼表情包",
+                imageUrl: "./0409/7.jpg",
+                downloadUrl: "./0409/7.jpg"
+            },
+            {
+                id: 31,
+                title: "哼! - 迪迦奥特曼表情包",
+                imageUrl: "./0409/6.jpg",
+                downloadUrl: "./0409/6.jpg"
+            },
+            {
+                id: 32,
+                title: "咏春拳警告",
+                imageUrl: "./0409/8.jpg",
+                downloadUrl: "./0409/8.jpg"
+            },
+            {
+                id: 33,
+                title: "已在工位",
+                imageUrl: "./0409/9.jpg",
+                downloadUrl: "./0409/9.jpg"
+            },
+            {
+                id: 34,
+                title: "已在工位如果一个人周五还不开心那他周六肯定要上班",
+                imageUrl: "./0409/8.gif",
+                downloadUrl: "./0409/8.gif"
+            },
+            {
+                id: 35,
+                title: "想吃小巴掌了",
+                imageUrl: "./0409/10.jpg",
+                downloadUrl: "./0409/10.jpg"
+            },
+            {
+                id: 36,
+                title: "坐稳，要漂移了（小猫猫开车",
+                imageUrl: "./0409/11.jpg",
+                downloadUrl: "./0409/11.jpg"
+            }
         ];
+
+        // 随机打乱数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         // 渲染表情包卡片
         function renderEmojis(emojisToRender = emojis) {
             const emojiGrid = document.getElementById('emojiGrid');
             emojiGrid.innerHTML = '';
             
-            emojisToRender.forEach(emoji => {
+            // 随机打乱表情包数组
+            const shuffledEmojis = shuffleArray([...emojisToRender]);
+            
+            shuffledEmojis.forEach(emoji => {
                 const card = document.createElement('div');
                 card.className = 'emoji-card';
                 card.innerHTML = `
-                    <img src="${emoji.imageUrl}" alt="${emoji.title}">
+                    <img data-src="${emoji.imageUrl}" alt="${emoji.title}">
                     <div class="emoji-info">
                         <h3>${emoji.title}</h3>
                         <a href="${emoji.downloadUrl}" class="download-btn" download>下载</a>
                     </div>
                 `;
                 emojiGrid.appendChild(card);
+                
+                // 观察新添加的图片
+                const img = card.querySelector('img');
+                observer.observe(img);
             });
         }
 
-        // 搜索功能
-        function searchEmojis() {
+        // 搜索功能（使用防抖）
+        const searchEmojis = debounce(() => {
             const searchInput = document.getElementById('searchInput');
             const searchTerm = searchInput.value.toLowerCase();
             
@@ -253,12 +412,17 @@
             );
             
             renderEmojis(filteredEmojis);
-        }
+        }, 300);
 
         // 初始化页面
-        renderEmojis();
-    </script>
-    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEmojis();
+            
+            // 添加输入事件监听
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', searchEmojis);
+        });
+
         function gotoPage(url) {
             url && window.open(url);
         }
